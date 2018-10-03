@@ -52,6 +52,7 @@ export default class DropdownAlert extends Component {
     renderCancel: PropTypes.func,
     renderTitle: PropTypes.func,
     renderMessage: PropTypes.func,
+    deviceType: PropTypes.string,
   };
   static defaultProps = {
     onClose: null,
@@ -133,6 +134,7 @@ export default class DropdownAlert extends Component {
     renderCancel: undefined,
     renderTitle: undefined,
     renderMessage: undefined,
+    deviceType: 'iPhone 7'
   };
   constructor(props) {
     super(props);
@@ -367,6 +369,16 @@ export default class DropdownAlert extends Component {
         return [StyleSheet.flatten(defaultContainer), StyleSheet.flatten(this.props.containerStyle)];
     }
   }
+
+  getSafeAreaMargin() {
+    const { deviceType } = this.props;
+
+    if (deviceType === 'iPhone X') {
+      return { marginTop: 44 };
+    }
+    return null;
+  }
+
   getSourceForType(type) {
     switch (type) {
       case 'info':
@@ -484,13 +496,13 @@ export default class DropdownAlert extends Component {
             onLayout={event => this.onLayoutEvent(event)}
           >
             <View style={style}>
-              <SafeAreaView style={StyleSheet.flatten(this.props.safeAreaStyle)}>
+              <View style={[this.props.safeAreaStyle, this.getSafeAreaMargin()]}>
                 {this.renderImage(source)}
                 <View style={StyleSheet.flatten(this.props.defaultTextContainer)}>
                   {this.renderTitle()}
                   {this.renderMessage()}
                 </View>
-              </SafeAreaView>
+              </View>
               {this.renderCancel(showCancel)}
             </View>
           </TouchableOpacity>
